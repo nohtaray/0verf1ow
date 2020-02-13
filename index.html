@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>びーうぃっせんどー</title>
+  <style>
+    body {
+      font-family: Georgia;
+      color: #333333;
+      text-align: center;
+    }
+    #out {
+      font-size: 70px;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+  <input type="text" id="in">
+  <div id="out"></div>
+<script>
+document.querySelector('#in').focus();
+
+const word = `
+Go out of control
+Be wise and fool
+`.trim();
+
+function convert(s) {
+  const ret = [];
+  const skipChars = /[\s\?']/g;
+  const posMap = [...word]
+    .map((c, i) => c.match(skipChars) ? -1 : i)
+    .filter(p => p >= 0);
+  [...word].forEach((c, i) => {
+    if (c.match(skipChars)) {
+      ret[i] = c;
+    }
+  });
+  posMap.forEach((p, i) => {
+    ret[p] = s[i];
+  });
+
+  if (ret.includes(undefined)) {
+    ret.length = ret.findIndex(c => c === undefined);
+  }
+  return ret
+    .map(c => c === '\n' ? '<br>' : c)
+    .map((c, i) => word[i].match(/[A-Z]/) ? c.toUpperCase() : c)
+    .join('');
+}
+
+document.querySelector('#in').onkeydown = () => {
+  setTimeout(() => {
+    const s = document.querySelector('#in').value;
+    document.querySelector('#out').innerHTML = convert(s);
+  });
+}
+</script>
+</body>
+</html>
